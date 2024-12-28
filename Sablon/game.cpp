@@ -70,10 +70,18 @@ void Game::Init()
 	// load shaders
 	ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
 	// configure shaders
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
-	                                  static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
-	ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width)*2,
+	                                  static_cast<float>(this->Height)*2, 0.0f, -2000.0f, 2000.0f);
+    ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
+    view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::rotate(view, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    ResourceManager::GetShader("sprite").SetMatrix4("view", view);
+
+
 	// set render-specific controls
 	Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 	// load textures
