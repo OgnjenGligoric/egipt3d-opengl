@@ -29,6 +29,8 @@ vector<GameObject*> Doors;
 GameObject* Water;
 GameObject* Fish;
 TextRenderer* Text;
+glm::mat4 projection;
+glm::mat4 view;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -70,19 +72,13 @@ void Game::Init()
 	// load shaders
 	ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
 	// configure shaders
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width)*2,
-	                                  static_cast<float>(this->Height)*2, 0.0f, -2000.0f, 2000.0f);
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width) * 2,
+        static_cast<float>(this->Height) * 2, 0.0f, -2000.0f, 2000.0f);
+
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-    view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    view = glm::rotate(view, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-    ResourceManager::GetShader("sprite").SetMatrix4("view", view);
-
-
-	// set render-specific controls
+    
+    // set render-specific controls
 	Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 	// load textures
 	ResourceManager::LoadTexture("res/texel_checker.png", false, "face");
@@ -124,6 +120,7 @@ void Game::Update(float dt)
     {
         _openDoors(dt);
     }
+    
 }
 
 void Game::ProcessInput(int key)
@@ -177,6 +174,31 @@ void Game::ProcessInput(int key)
             largestPyramid->Threshold = 0.0f;
         }
     }
+    if (Keys[GLFW_KEY_LEFT]) {
+        Renderer->CameraAngleX -= 5.0f;
+    }
+    if (Keys[GLFW_KEY_RIGHT]) {
+        Renderer->CameraAngleX += 5.0f;
+    }
+    if (Keys[GLFW_KEY_UP]) { 
+        Renderer->CameraAngleY -= 5.0f;
+    }
+    if (Keys[GLFW_KEY_DOWN]) { 
+        Renderer->CameraAngleY += 5.0f;
+    }
+
+    if (Keys[GLFW_KEY_PAGE_UP]) {
+        Renderer->CameraPositionX += 10.0f;
+    }
+    if (Keys[GLFW_KEY_PAGE_DOWN]) {
+        Renderer->CameraPositionX -= 10.0f;
+    }
+    if (Keys[GLFW_KEY_NUM_LOCK]) {
+        Renderer->CameraPositionY += 10.0f;
+    }
+    if (Keys[GLFW_KEY_HOME]) {
+        Renderer->CameraPositionY -= 10.0f;
+    }
 }
 
 void Game::ProcessMouseClick(double x, double y)
@@ -193,6 +215,7 @@ void Game::ProcessMouseClick(double x, double y)
 
 bool Game::Render()
 {
+    
     Sky->Draw(*Renderer);
 
     for (const auto& star : Stars)

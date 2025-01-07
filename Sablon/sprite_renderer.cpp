@@ -15,6 +15,12 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color, float alpha, bool isFlippedHorizontally, float threshold, glm::vec3 highlightColor)
 {
     this->shader.Use();
+
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(CameraPositionX, CameraPositionY, 0.0f));
+    view = glm::rotate(view, glm::radians(CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::rotate(view, glm::radians(CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));  
 
@@ -30,6 +36,7 @@ void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec2 position, glm::vec
     model = glm::scale(model, glm::vec3(size, 1.0f)); 
 
     this->shader.SetMatrix4("model", model);
+    this->shader.SetMatrix4("view", view);
 
     this->shader.SetVector3f("spriteColor", color);
 

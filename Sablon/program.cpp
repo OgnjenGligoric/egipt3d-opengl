@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
     Egipt = Game(mode->width, mode->height);
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Egipt 2D", monitor, NULL); // Napravi novi prozor
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Egipt 2D", NULL, NULL); // Napravi novi prozor
     // glfwCreateWindow( sirina, visina, naslov, monitor na koji ovaj prozor ide preko citavog ekrana (u tom slucaju umjesto NULL ide glfwGetPrimaryMonitor() ), i prozori sa kojima ce dijeliti resurse )
     if (window == NULL) //Ako prozor nije napravljen
     {
@@ -153,6 +153,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         switch (key) {
         case GLFW_KEY_A:
         case GLFW_KEY_D:
+        case GLFW_KEY_LEFT:
+        case GLFW_KEY_RIGHT:
+        case GLFW_KEY_UP:
+        case GLFW_KEY_DOWN:
+
             Egipt.ProcessInput(key);
             break;
         default:;
