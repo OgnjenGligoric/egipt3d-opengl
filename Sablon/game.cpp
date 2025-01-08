@@ -72,9 +72,8 @@ void Game::Init()
 	// load shaders
 	ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
 	// configure shaders
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width) * 2,
-        static_cast<float>(this->Height) * 2, 0.0f, -2000.0f, 2000.0f);
-
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Width /
+        (float)Height, 0.1f, 5000.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     
@@ -198,6 +197,12 @@ void Game::ProcessInput(int key)
     }
     if (Keys[GLFW_KEY_HOME]) {
         Renderer->CameraPositionY -= 10.0f;
+    }
+    if (Keys[GLFW_KEY_KP_SUBTRACT]) {
+        Renderer->CameraPositionZ -= 10.0f;
+    }
+    if (Keys[GLFW_KEY_KP_MULTIPLY]) {
+        Renderer->CameraPositionZ += 10.0f;
     }
 }
 

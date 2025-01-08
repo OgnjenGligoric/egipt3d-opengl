@@ -17,7 +17,7 @@ void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec2 position, glm::vec
     this->shader.Use();
 
     glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(CameraPositionX, CameraPositionY, 0.0f));
+    view = glm::translate(view, glm::vec3(CameraPositionX, CameraPositionY, CameraPositionZ));
     view = glm::rotate(view, glm::radians(CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
     view = glm::rotate(view, glm::radians(CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
 
