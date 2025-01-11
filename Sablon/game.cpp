@@ -74,13 +74,18 @@ void Game::Init()
     ourModel = Model("res/backpack/backpack.obj");
 
 	// load shaders
-	ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
+
 	// configure shaders
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Width /
         (float)Height, 0.1f, 5000.0f);
+    ResourceManager::GetShader("model").Use().SetInteger("image", 0);
+    ResourceManager::GetShader("model").SetMatrix4("projection", projection);
+
+    ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
-    
+
     // set render-specific controls
 	Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 	// load textures
@@ -123,7 +128,17 @@ void Game::Update(float dt)
     {
         _openDoors(dt);
     }
-    
+    view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
+    view = glm::rotate(view, glm::radians(Renderer->CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::rotate(view, glm::radians(Renderer->CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
+    ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
+    glm::mat4 model3D = glm::mat4(1.0f);
+    model3D = glm::translate(model3D, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model3D = glm::scale(model3D, glm::vec3(200.0f, 200.0f, 200.0f));	// it's a bit too big for our scene, so scale it down
+    ResourceManager::GetShader("model").SetMatrix4("model", model3D);
+
+    ResourceManager::GetShader("sprite").Use();
 }
 
 void Game::ProcessInput(int key)
@@ -224,10 +239,7 @@ void Game::ProcessMouseClick(double x, double y)
 
 bool Game::Render()
 {
-    ourModel.Draw(ResourceManager::GetShader("sprite"));
-
     Sky->Draw(*Renderer);
-
     for (const auto& star : Stars)
     {
         star->Draw(*Renderer);
@@ -265,6 +277,7 @@ bool Game::Render()
         _shouldClose = false;
         return true;
     }
+    ourModel.Draw(ResourceManager::GetShader("model").Use());
     return false;
 }
 

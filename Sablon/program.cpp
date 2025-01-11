@@ -62,6 +62,7 @@ int main(int argc, char* argv[])
     glViewport(0, 0, mode->width, mode->height);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_DEPTH_TEST);
 
     // initialize game
     // ---------------
@@ -91,7 +92,7 @@ int main(int argc, char* argv[])
         // render
         // ------
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         const bool should_close = Egipt.Render();
         if (should_close)
         {
