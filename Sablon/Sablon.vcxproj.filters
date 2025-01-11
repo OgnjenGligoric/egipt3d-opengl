@@ -22,6 +22,9 @@
     <Filter Include="Source Files\Resource Manager">
       <UniqueIdentifier>{cad8e72d-a3f3-4c21-abe9-6a21633dfa11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{effca806-1a2e-439c-aa35-77be071dcd3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shader.cpp">
@@ -72,6 +75,12 @@
     <None Include="text.vert">
       <Filter>Source Files\Shader Files</Filter>
     </None>
+    <None Include="model.fs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
+    <None Include="model.vs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -97,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="text_renderer.h">
       <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Source Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Source Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

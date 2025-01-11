@@ -12,6 +12,7 @@
 #include <thread>
 
 #include "text_renderer.h"
+#include "model.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ GameObject* Fish;
 TextRenderer* Text;
 glm::mat4 projection;
 glm::mat4 view;
+Model ourModel;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -69,6 +71,8 @@ Game::~Game()
 
 void Game::Init()
 {
+    ourModel = Model("res/backpack/backpack.obj");
+
 	// load shaders
 	ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
 	// configure shaders
@@ -220,7 +224,8 @@ void Game::ProcessMouseClick(double x, double y)
 
 bool Game::Render()
 {
-    
+    ourModel.Draw(ResourceManager::GetShader("sprite"));
+
     Sky->Draw(*Renderer);
 
     for (const auto& star : Stars)
