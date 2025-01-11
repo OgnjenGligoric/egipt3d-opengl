@@ -2,7 +2,7 @@
 
 # 1.1 Perspective projection
 
-* ![alt text](image.png)
+![alt text](image.png)
 
 # 1.2 3D Model Loading
 
