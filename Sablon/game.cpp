@@ -131,9 +131,11 @@ void Game::Update(float dt)
         _openDoors(dt);
     }
     view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
+    view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
+
     ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
     glm::mat4 model3D = glm::mat4(1.0f);
     model3D = glm::translate(model3D, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
@@ -194,16 +196,16 @@ void Game::ProcessInput(int key)
             largestPyramid->Threshold = 0.0f;
         }
     }
-    if (Keys[GLFW_KEY_LEFT]) {
+    if (Keys[GLFW_KEY_UP]) {
         Renderer->CameraAngleX -= 5.0f;
     }
-    if (Keys[GLFW_KEY_RIGHT]) {
+    if (Keys[GLFW_KEY_DOWN]) {
         Renderer->CameraAngleX += 5.0f;
     }
-    if (Keys[GLFW_KEY_UP]) { 
+    if (Keys[GLFW_KEY_LEFT]) {
         Renderer->CameraAngleY -= 5.0f;
     }
-    if (Keys[GLFW_KEY_DOWN]) { 
+    if (Keys[GLFW_KEY_RIGHT]) {
         Renderer->CameraAngleY += 5.0f;
     }
 
