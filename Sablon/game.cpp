@@ -33,6 +33,7 @@ TextRenderer* Text;
 glm::mat4 projection;
 glm::mat4 view;
 Model ourModel;
+Model skyBoxModel;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -72,6 +73,7 @@ Game::~Game()
 void Game::Init()
 {
     ourModel = Model("res/backpack/backpack.obj");
+    skyBoxModel = Model("res/skybox/source/SkyBox.obj");
 
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
@@ -278,6 +280,8 @@ bool Game::Render()
         return true;
     }
     ourModel.Draw(ResourceManager::GetShader("model").Use());
+    skyBoxModel.Draw(ResourceManager::GetShader("model").Use());
+
     return false;
 }
 
