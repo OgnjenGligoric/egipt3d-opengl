@@ -32,7 +32,9 @@ GameObject* Fish;
 TextRenderer* Text;
 glm::mat4 projection;
 glm::mat4 view;
-Model ourModel;
+Model skybox;
+Model pyramid;
+Model desert;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -71,7 +73,9 @@ Game::~Game()
 
 void Game::Init()
 {
-    ourModel = Model("res/backpack/pyramid.obj");
+    skybox = Model("res/backpack/skybox.obj");
+    pyramid = Model("res/backpack/pyramid.obj");
+    desert = Model("res/backpack/desert.obj");
 
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
@@ -136,9 +140,12 @@ void Game::Update(float dt)
 
     ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
     glm::mat4 model3D = glm::mat4(1.0f);
-    model3D = glm::translate(model3D, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    model3D = glm::scale(model3D, glm::vec3(200.0f, 200.0f, 200.0f));	// it's a bit too big for our scene, so scale it down
+    model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
+    model3D = glm::scale(model3D, glm::vec3(1500.0f, 1500.0f, 1500.0f));	// it's a bit too big for our scene, so scale it down
+    model3D = glm::rotate(model3D, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
     ResourceManager::GetShader("model").SetMatrix4("model", model3D);
+    
 
     ResourceManager::GetShader("sprite").Use();
 }
@@ -279,7 +286,21 @@ bool Game::Render()
         _shouldClose = false;
         return true;
     }
-    ourModel.Draw(ResourceManager::GetShader("model").Use());
+
+    skybox.Draw(ResourceManager::GetShader("model").Use());
+    glm::mat4 model3D = glm::mat4(1.0f);
+
+	model3D = glm::translate(model3D, glm::vec3(500.0f, -100.0f, 0.0f)); // translate it down so it's at the center of the scene
+    model3D = glm::scale(model3D, glm::vec3(200.0f, 200.0f, 200.0f));
+
+    ResourceManager::GetShader("model").Use().SetMatrix4("model", model3D);
+    pyramid.Draw(ResourceManager::GetShader("model").Use());
+
+    glm::mat4 desertModel = glm::mat4(1.0f);
+    desertModel = glm::translate(desertModel, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+    desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
+    ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
+    desert.Draw(ResourceManager::GetShader("model").Use());
 
     return false;
 }
