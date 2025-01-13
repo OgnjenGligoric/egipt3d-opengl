@@ -33,7 +33,6 @@ TextRenderer* Text;
 glm::mat4 projection;
 glm::mat4 view;
 Model ourModel;
-Model skyBoxModel;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -72,8 +71,7 @@ Game::~Game()
 
 void Game::Init()
 {
-    ourModel = Model("res/backpack/backpack.obj");
-    skyBoxModel = Model("res/skybox/source/SkyBox.obj");
+    ourModel = Model("res/backpack/pyramid.obj");
 
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
@@ -210,22 +208,22 @@ void Game::ProcessInput(int key)
     }
 
     if (Keys[GLFW_KEY_PAGE_UP]) {
-        Renderer->CameraPositionX += 10.0f;
+        Renderer->CameraPositionX += 5.0f;
     }
     if (Keys[GLFW_KEY_PAGE_DOWN]) {
-        Renderer->CameraPositionX -= 10.0f;
+        Renderer->CameraPositionX -= 5.0f;
     }
     if (Keys[GLFW_KEY_NUM_LOCK]) {
-        Renderer->CameraPositionY += 10.0f;
+        Renderer->CameraPositionY += 5.0f;
     }
     if (Keys[GLFW_KEY_HOME]) {
-        Renderer->CameraPositionY -= 10.0f;
+        Renderer->CameraPositionY -= 5.0f;
     }
     if (Keys[GLFW_KEY_KP_SUBTRACT]) {
-        Renderer->CameraPositionZ -= 10.0f;
+        Renderer->CameraPositionZ -= 5.0f;
     }
     if (Keys[GLFW_KEY_KP_MULTIPLY]) {
-        Renderer->CameraPositionZ += 10.0f;
+        Renderer->CameraPositionZ += 5.0f;
     }
 }
 
@@ -282,7 +280,6 @@ bool Game::Render()
         return true;
     }
     ourModel.Draw(ResourceManager::GetShader("model").Use());
-    skyBoxModel.Draw(ResourceManager::GetShader("model").Use());
 
     return false;
 }
