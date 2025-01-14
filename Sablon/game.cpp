@@ -279,7 +279,6 @@ bool Game::Render()
         Doors[i]->Draw(*Renderer);
     }
     Fish->Draw(*Renderer);
-    Water->Draw(*Renderer);
     for (const auto& grass: Grass)
     {
         grass->Draw(*Renderer);
@@ -317,6 +316,7 @@ bool Game::Render()
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
     transparent_cube_renderer->DrawModel(transparent_cube);
+    Water->Draw(*Renderer);
 
     return false;
 }
