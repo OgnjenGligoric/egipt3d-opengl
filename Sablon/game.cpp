@@ -315,9 +315,11 @@ bool Game::Render()
     desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
-    transparent_cube_renderer->DrawModel(transparent_cube);
+    
+    glDepthMask(GL_FALSE);
+	transparent_cube_renderer->DrawModel(transparent_cube);
     Water->Draw(*Renderer);
-
+    glDepthMask(GL_TRUE);
     return false;
 }
 
