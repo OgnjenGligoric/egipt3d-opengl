@@ -54,9 +54,6 @@
     <ClCompile Include="text_renderer.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="model_renderer.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

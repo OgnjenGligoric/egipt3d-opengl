@@ -1,14 +1,13 @@
 #include "game.h"
 #include <algorithm>
-#include <chrono>
 
 #include "resource_manager.h"
 #include "sprite_renderer.h"
+#include "model_renderer.h"
 #include "game_object.h"
 #include <vector>
 #include <cstdlib> 
 #include <ctime>
-#include <iostream>
 #include <thread>
 
 #include "text_renderer.h"
@@ -32,9 +31,11 @@ GameObject* Fish;
 TextRenderer* Text;
 glm::mat4 projection;
 glm::mat4 view;
-Model skybox;
+ModelRenderer* sky_box;
 Model pyramid;
 Model desert;
+Model sky_box_model;
+
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -73,9 +74,7 @@ Game::~Game()
 
 void Game::Init()
 {
-    skybox = Model("res/backpack/skybox.obj");
-    pyramid = Model("res/backpack/pyramid.obj");
-    desert = Model("res/backpack/desert.obj");
+    
 
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
@@ -121,6 +120,14 @@ void Game::Init()
 	                      ResourceManager::GetTexture("fish"));
     Text = new TextRenderer(Width, Height);
     Text->Load("fonts/Antonio-Regular.ttf", 24);
+    
+    sky_box = new ModelRenderer(ResourceManager::GetShader("model"), 
+        glm::vec3(-750.0f, -100.0f, -750.0f), 
+        glm::vec3(1500.0f, 1500.0f, 1500.0f),
+        glm::vec3(90.0f, 0.0f, 0.0f));
+    pyramid = Model("res/backpack/pyramid.obj");
+    desert = Model("res/backpack/desert.obj");
+    sky_box_model = Model("res/backpack/skybox.obj");
 }
 
 void Game::Update(float dt)
@@ -248,6 +255,7 @@ void Game::ProcessMouseClick(double x, double y)
 
 bool Game::Render()
 {
+    ResourceManager::GetShader("sprite").Use();
     Sky->Draw(*Renderer);
     for (const auto& star : Stars)
     {
@@ -286,8 +294,7 @@ bool Game::Render()
         _shouldClose = false;
         return true;
     }
-
-    skybox.Draw(ResourceManager::GetShader("model").Use());
+    sky_box->DrawModel(sky_box_model);
     glm::mat4 model3D = glm::mat4(1.0f);
 
 	model3D = glm::translate(model3D, glm::vec3(500.0f, -100.0f, 0.0f)); // translate it down so it's at the center of the scene

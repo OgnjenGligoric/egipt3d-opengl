@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="game_object.cpp" />
-    <ClCompile Include="model_renderer.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="resource_manager.cpp" />
