@@ -104,19 +104,19 @@ void Game::Init()
 	ResourceManager::LoadTexture("res/pyramid.png", true, "pyramid");
 	ResourceManager::LoadTexture("res/door.jpg", true, "door");
 
-	Sun = new GameObject(glm::vec2(this->Width - 200.0f, this->Height / 2.0f - 100.0f), glm::vec2(200.0f, 200.0f),
+	Sun = new GameObject(glm::vec3(this->Width - 200.0f, this->Height / 2.0f - 100.0f, 0.0f), glm::vec2(200.0f, 200.0f),
 	                     ResourceManager::GetTexture("sun"));
-	Moon = new GameObject(glm::vec2(0.0f, this->Height / 2.0f - 100.0f), glm::vec2(200.0f, 200.0f),
+	Moon = new GameObject(glm::vec3(0.0f, this->Height / 2.0f - 100.0f, 0.0f), glm::vec2(200.0f, 200.0f),
 	                      ResourceManager::GetTexture("moon"));
-	Desert = new GameObject(glm::vec2(0.0f, Height / 2), glm::vec2(Width, Height / 2),
+	Desert = new GameObject(glm::vec3(0.0f, Height / 2, 0.0f), glm::vec2(Width, Height / 2),
 	                        ResourceManager::GetTexture("desert"));
-	Sky = new GameObject(glm::vec2(0.0f, 0.0f), glm::vec2(Width, Height), ResourceManager::GetTexture("sky"));
-	Water = new GameObject(glm::vec2(Width / 1.5f, Height / 1.2f), glm::vec2(Width / 3, Width / 10),
+	Sky = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(Width, Height), ResourceManager::GetTexture("sky"));
+	Water = new GameObject(glm::vec3(Width / 1.5f, Height / 1.2f, 100.0f), glm::vec2(Width / 3, Width / 10),
 	                       ResourceManager::GetTexture("water"), glm::vec3(1.0f), glm::vec2(0.0f, 0.0f), 0.7f);
 	_initializeStars();
 	_initializePyramids();
 	_initializeGrass();
-	Fish = new GameObject(glm::vec2(Width / 1.45f, Height / 1.1f), glm::vec2(Width / 30, Width / 30),
+	Fish = new GameObject(glm::vec3(Width / 1.45f, Height / 1.1f, 0.0f), glm::vec2(Width / 30, Width / 30),
 	                      ResourceManager::GetTexture("fish"));
     Text = new TextRenderer(Width, Height);
     Text->Load("fonts/Antonio-Regular.ttf", 24);
@@ -355,14 +355,14 @@ void Game::_initializeStars() const
     constexpr int starCount = 50;
 
     while (Stars.size() < starCount) {
-        Stars.push_back(new GameObject(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("star")));
+        Stars.push_back(new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("star")));
     }
 
     for (int i = 0; i < starCount; ++i) {
         const auto x = static_cast<float>(rand() % Width);
         const auto y = static_cast<float>(rand() % static_cast<int>(_getSunRiseHeightPoint()));
         const auto size = static_cast<float>(10 + rand() % 21);
-        Stars[i]->Position = glm::vec2(x, y);
+        Stars[i]->Position = glm::vec3(x, y, 0.0f);
         Stars[i]->Size = glm::vec2(size, size);
         Stars[i]->Alpha = 1.0f; 
     }
@@ -374,14 +374,14 @@ void Game::_initializePyramids()
     constexpr int pyramidCount = 3;
 
     while (Pyramids.size() < pyramidCount) {
-        Pyramids.push_back(new GameObject(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("pyramid")));
+        Pyramids.push_back(new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("pyramid")));
     }
 
     for (int i = 0; i < pyramidCount; ++i) {
         const auto size = static_cast<float>(Width) / 10 + rand() % 100;
         const auto x = static_cast<float>(rand() % Width/2);
         const auto y = _getSunRiseHeightPoint() - size + rand() % static_cast<int>(Height - _getSunRiseHeightPoint() - size);
-        Pyramids[i]->Position = glm::vec2(x, y);
+        Pyramids[i]->Position = glm::vec3(x, y, 0.0f);
         Pyramids[i]->Size = glm::vec2(size, size);
         Pyramids[i]->Alpha = 1.0f;
         Pyramids[i]->Threshold = 0.0f;
@@ -401,14 +401,14 @@ void Game::_initializeGrass() const
     constexpr int grassCount = 30;
 
     while (Grass.size() < grassCount) {
-        Grass.push_back(new GameObject(glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("grass")));
+        Grass.push_back(new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f), ResourceManager::GetTexture("grass")));
     }
 
     for (int i = 0; i < grassCount; ++i) {
         const auto size = static_cast<float>(Width) / 15 + rand() % 200;
         const auto x = Water->Position.x - size/2 + rand() % static_cast<int>(Water->Size.x);
         const auto y = Water->Position.y + Water->Size.y - size +  (rand() % static_cast<int>(Width/30) - Width/60);
-        Grass[i]->Position = glm::vec2(x, y);
+        Grass[i]->Position = glm::vec3(x, y, 0.0f);
         Grass[i]->Size = glm::vec2(size, size);
         Grass[i]->Alpha = 1.0f;
     }
@@ -475,12 +475,12 @@ void Game::_initializeDoors() const
     Doors.shrink_to_fit();
     for (const auto& pyramid : Pyramids)
     {
-        Doors.push_back(new GameObject(glm::vec2(pyramid->Position.x+pyramid->Size.x/4, pyramid->Position.y+pyramid->Size.y-pyramid->Size.x/4), glm::vec2(pyramid->Size.x/4,pyramid->Size.x/4), ResourceManager::GetTexture("door")));
+        Doors.push_back(new GameObject(glm::vec3(pyramid->Position.x+pyramid->Size.x/4, pyramid->Position.y+pyramid->Size.y-pyramid->Size.x/4, 0.0f), glm::vec2(pyramid->Size.x/4,pyramid->Size.x/4), ResourceManager::GetTexture("door")));
     }
     for (const auto& door : Doors)
     {
         door->Alpha = 0.0f;
-        door->Rotation = 270.0f;
+        door->Rotation = glm::vec3(0.0f, 0.0f, 270.0f);
         door->HighlightColor = glm::vec3(0.0f, 0.0f, 0.0f);
     }
 }

@@ -20,7 +20,7 @@ public:
     float CameraPositionZ = 0.0f;
     SpriteRenderer(Shader& shader);
     ~SpriteRenderer();
-    void DrawSprite(Texture2D& texture, glm::vec2 position, glm::vec2 size = glm::vec2(10.0f, 10.0f), float rotate = 0.0f, glm::vec3 color = glm::vec3(1.0f), float alpha = 1.0f, bool isFlippedHorizontally = false, float threshold = 0.0f, glm::vec3 highlightColor = glm::vec3(1.0f, 0.0f, 0.0f));
+    void DrawSprite(Texture2D& texture, glm::vec3 position, glm::vec2 size = glm::vec2(10.0f, 10.0f), glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 color = glm::vec3(1.0f), float alpha = 1.0f, bool isFlippedHorizontally = false, float threshold = 0.0f, glm::vec3 highlightColor = glm::vec3(1.0f, 0.0f, 0.0f));
 private:
     Shader       shader;
     unsigned int quadVAO;

@@ -2,7 +2,7 @@
 
 
 GameObject::GameObject()
-    : Position(0.0f, 0.0f),
+    : Position(0.0f, 0.0f, 0.0f),
 	Size(1.0f, 1.0f),
 	Velocity(0.0f),
 	Color(1.0f), Rotation(0.0f),
@@ -11,7 +11,7 @@ GameObject::GameObject()
 	Threshold(0.0f),
 	HighlightColor(glm::vec3(1.0f, 0.0f, 0.0f)) { }
 
-GameObject::GameObject(glm::vec2 pos, 
+GameObject::GameObject(glm::vec3 pos, 
 					glm::vec2 size, 
 					Texture2D sprite, 
 					glm::vec3 color, 
