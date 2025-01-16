@@ -24,6 +24,7 @@ GameObject* Sky;
 GameObject* Star;
 vector<GameObject*> Stars;
 vector<GameObject*> Grass;
+GameObject* GrassTwo;
 vector<GameObject*> Pyramids;
 vector<GameObject*> Doors;
 GameObject* Water;
@@ -37,7 +38,7 @@ Model desert;
 Model sky_box_model;
 Model transparent_cube;
 ModelRenderer* transparent_cube_renderer;
-
+float GrassRotation = 0.0f;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -116,9 +117,9 @@ void Game::Init()
 	Water = new GameObject(glm::vec3(-600.0f, -1830.0f, -600.0f), glm::vec2(Width / 3, Width / 3),
 	                       ResourceManager::GetTexture("water"), glm::vec3(1.0f), glm::vec2(0.0f, 0.0f), 0.7f);
     Water->Rotation = glm::vec3(0.0f, 90.0f, 90.0f);
+    GrassTwo = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(500.0f, 500.0f), ResourceManager::GetTexture("grass"));
 	_initializeStars();
 	_initializePyramids();
-	_initializeGrass();
 	Fish = new GameObject(glm::vec3(Width / 1.45f, Height / 1.1f, 0.0f), glm::vec2(Width / 30, Width / 30),
 	                      ResourceManager::GetTexture("fish"));
     Text = new TextRenderer(Width, Height);
@@ -152,8 +153,9 @@ void Game::Update(float dt)
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
     view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
-
-    ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
+    GrassRotation += 2;
+    GrassTwo->Rotation = glm::vec3(0.0f, static_cast<float>(static_cast<int>(GrassRotation) % 360), 0.0f);
+	ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
     glm::mat4 model3D = glm::mat4(1.0f);
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
     model3D = glm::scale(model3D, glm::vec3(1500.0f, 1500.0f, 1500.0f));	// it's a bit too big for our scene, so scale it down
@@ -284,7 +286,7 @@ bool Game::Render()
         grass->Draw(*Renderer);
     }
     Text->RenderText("Ognjen Gligoric SV79/2021", Width/30, Height/30, 1.0f);
-
+    
     if (_isDisplayedToBeContinued)
     {
 	    Text->RenderText("To be continued in 3D game", Width / 2, Height / 4, 3.0f,glm::vec3(1),1.0f, _toBeContinuedThreshold);
@@ -319,6 +321,7 @@ bool Game::Render()
 
     glDepthMask(GL_FALSE);
     Water->Draw(*Renderer);
+    GrassTwo->Draw(*Renderer);
     glDepthMask(GL_TRUE);
     return false;
 }

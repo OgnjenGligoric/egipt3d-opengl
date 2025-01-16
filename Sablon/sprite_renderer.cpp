@@ -22,22 +22,14 @@ void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec3 position, glm::vec
     view = glm::rotate(view, glm::radians(CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
     view = glm::translate(view, glm::vec3(CameraPositionX, CameraPositionY, CameraPositionZ));
 
-	glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, position); 
-    model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); 
-    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, position);
+    model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.5f));
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-
-    if (isFlippedHorizontally)
-    {
-        model = glm::scale(model, glm::vec3(-1.0f, 1.0f, 1.0f));  
-    }
-
-	model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); 
-
-    model = glm::scale(model, glm::vec3(size, 1.0f)); 
-
+	model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+    model = glm::scale(model, glm::vec3(size, 1.0f));
     this->shader.SetMatrix4("model", model);
     this->shader.SetMatrix4("view", view);
 
