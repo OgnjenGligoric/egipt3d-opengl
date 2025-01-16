@@ -16,7 +16,7 @@ public:
     float CameraAngleX = 45.0f;
     float CameraAngleY = 0.0f;
     float CameraPositionX = 0.0f;
-    float CameraPositionY = 0.0f;
+    float CameraPositionY = -600.0f;
     float CameraPositionZ = 0.0f;
     SpriteRenderer(Shader& shader);
     ~SpriteRenderer();

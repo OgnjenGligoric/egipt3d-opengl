@@ -24,7 +24,7 @@ GameObject* Sky;
 GameObject* Star;
 vector<GameObject*> Stars;
 vector<GameObject*> Grass;
-GameObject* GrassTwo;
+GameObject* Grass3D;
 vector<GameObject*> Pyramids;
 vector<GameObject*> Doors;
 GameObject* Water;
@@ -36,9 +36,11 @@ ModelRenderer* sky_box;
 Model pyramid;
 Model desert;
 Model sky_box_model;
-Model transparent_cube;
-ModelRenderer* transparent_cube_renderer;
+Model FishModel;
+ModelRenderer* FishModelRenderer;
 float GrassRotation = 0.0f;
+int moveFish = 300;
+
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -114,10 +116,14 @@ void Game::Init()
 	Desert = new GameObject(glm::vec3(0.0f, Height / 2, 0.0f), glm::vec2(Width, Height / 2),
 	                        ResourceManager::GetTexture("desert"));
 	Sky = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(Width, Height), ResourceManager::GetTexture("sky"));
-	Water = new GameObject(glm::vec3(-600.0f, -1830.0f, -600.0f), glm::vec2(Width / 3, Width / 3),
+	Water = new GameObject(glm::vec3(-600.0f, -500.0f, -600.0f), glm::vec2(1500.0f, 1000.0f),
 	                       ResourceManager::GetTexture("water"), glm::vec3(1.0f), glm::vec2(0.0f, 0.0f), 0.7f);
-    Water->Rotation = glm::vec3(0.0f, 90.0f, 90.0f);
-    GrassTwo = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(500.0f, 500.0f), ResourceManager::GetTexture("grass"));
+    Water->Rotation.x = 90.0f;
+
+	Grass3D = new GameObject(glm::vec3(-600.0f, 0.0f, -600.0f), glm::vec2(200.0f, 150.0f),
+	                         ResourceManager::GetTexture("grass"));
+    Grass3D->Rotation = glm::vec3(0.0f, 0.0f, 180.0f);
+
 	_initializeStars();
 	_initializePyramids();
 	Fish = new GameObject(glm::vec3(Width / 1.45f, Height / 1.1f, 0.0f), glm::vec2(Width / 30, Width / 30),
@@ -132,10 +138,10 @@ void Game::Init()
     pyramid = Model("res/backpack/pyramid.obj");
     desert = Model("res/backpack/desert.obj");
     sky_box_model = Model("res/backpack/skybox.obj");
-    transparent_cube = Model("res/backpack/clownfish.obj");
-    transparent_cube_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
-        glm::vec3(500.0f, -100.0f, 0.0f),
-        glm::vec3(200.0f, 200.0f, 200.0f),
+    FishModel = Model("res/backpack/clownfish.obj");
+    FishModelRenderer = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(-200.0f, 0.0f, -700.0f),
+        glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
 }
 
@@ -154,7 +160,6 @@ void Game::Update(float dt)
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
     view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
     GrassRotation += 2;
-    GrassTwo->Rotation = glm::vec3(0.0f, static_cast<float>(static_cast<int>(GrassRotation) % 360), 0.0f);
 	ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
     glm::mat4 model3D = glm::mat4(1.0f);
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
@@ -266,24 +271,24 @@ void Game::ProcessMouseClick(double x, double y)
 bool Game::Render()
 {
     ResourceManager::GetShader("sprite").Use();
-    Sky->Draw(*Renderer);
+    //Sky->Draw(*Renderer);
     for (const auto& star : Stars)
     {
-        star->Draw(*Renderer);
+    //    star->Draw(*Renderer);
     }
 
-    Sun->Draw(*Renderer);
-    Moon->Draw(*Renderer);
-    Desert->Draw(*Renderer);
+    //Sun->Draw(*Renderer);
+    //Moon->Draw(*Renderer);
+    //Desert->Draw(*Renderer);
     for (size_t i = 0; i < Pyramids.size(); ++i)
     {
-        Pyramids[i]->Draw(*Renderer);
-        Doors[i]->Draw(*Renderer);
+    //    Pyramids[i]->Draw(*Renderer);
+    //    Doors[i]->Draw(*Renderer);
     }
-    Fish->Draw(*Renderer);
+    //Fish->Draw(*Renderer);
     for (const auto& grass: Grass)
     {
-        grass->Draw(*Renderer);
+        //grass->Draw(*Renderer);
     }
     Text->RenderText("Ognjen Gligoric SV79/2021", Width/30, Height/30, 1.0f);
     
@@ -317,11 +322,14 @@ bool Game::Render()
     desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
-    transparent_cube_renderer->DrawModel(transparent_cube);
+    FishModelRenderer->DrawModel(FishModel);
 
     glDepthMask(GL_FALSE);
     Water->Draw(*Renderer);
-    GrassTwo->Draw(*Renderer);
+    Grass3D->Draw(*Renderer);
+    Grass3D->Rotation.y = 90.0f;
+    Grass3D->Draw(*Renderer);
+    Grass3D->Rotation.y = 0.0f;
     glDepthMask(GL_TRUE);
     return false;
 }
@@ -435,27 +443,11 @@ void Game::_initializeGrass() const
 
 void Game::_moveFish(float dt)
 {
-    const float fishSpeed = 100.0f ; 
-    const float padding = Water->Size.x / 10.0f;
-
-    float waterLeft = Water->Position.x + padding;
-    float waterRight = Water->Position.x + Water->Size.x - padding;
-
-    if (Fish->Position.x + Fish->Size.x > waterRight) {
-        Fish->FlipHorizontally();
-        Fish->Position.x = waterRight - Fish->Size.x; 
-    }
-    else if (Fish->Position.x <= waterLeft) {
-        Fish->FlipHorizontally();
-        Fish->Position.x = waterLeft; 
-    }
-
-    if (!Fish->IsFlippedHorizontally) {
-        Fish->Position.x -= fishSpeed * dt; 
-    }
-    else {
-        Fish->Position.x += fishSpeed * dt;
-    }
+    moveFish = (abs(moveFish) + 1) % 600;
+    int direction = moveFish - 300;
+    direction = (direction < 0) ? -1 : 1;
+    FishModelRenderer->Position.z += static_cast<float>(direction);
+    FishModelRenderer->Rotation.x = (direction < 0) ? -90.0f : 90.0f;
 }
 
 void Game::_toggleGrassVisibility()
