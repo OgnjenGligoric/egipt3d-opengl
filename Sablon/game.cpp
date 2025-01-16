@@ -113,7 +113,7 @@ void Game::Init()
 	Desert = new GameObject(glm::vec3(0.0f, Height / 2, 0.0f), glm::vec2(Width, Height / 2),
 	                        ResourceManager::GetTexture("desert"));
 	Sky = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(Width, Height), ResourceManager::GetTexture("sky"));
-	Water = new GameObject(glm::vec3(500.0f, -1000.0f, 0.0f), glm::vec2(Width / 3, Width / 10),
+	Water = new GameObject(glm::vec3(-600.0f, -1830.0f, -600.0f), glm::vec2(Width / 3, Width / 3),
 	                       ResourceManager::GetTexture("water"), glm::vec3(1.0f), glm::vec2(0.0f, 0.0f), 0.7f);
     Water->Rotation = glm::vec3(0.0f, 90.0f, 90.0f);
 	_initializeStars();
@@ -131,7 +131,7 @@ void Game::Init()
     pyramid = Model("res/backpack/pyramid.obj");
     desert = Model("res/backpack/desert.obj");
     sky_box_model = Model("res/backpack/skybox.obj");
-    transparent_cube = Model("res/backpack/transparent_cube.obj");
+    transparent_cube = Model("res/backpack/clownfish.obj");
     transparent_cube_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(500.0f, -100.0f, 0.0f),
         glm::vec3(200.0f, 200.0f, 200.0f),
@@ -315,9 +315,9 @@ bool Game::Render()
     desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
-    
+    transparent_cube_renderer->DrawModel(transparent_cube);
+
     glDepthMask(GL_FALSE);
-	transparent_cube_renderer->DrawModel(transparent_cube);
     Water->Draw(*Renderer);
     glDepthMask(GL_TRUE);
     return false;

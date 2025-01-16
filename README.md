@@ -11,3 +11,7 @@
 ## 1.2.1 Pyramid loaded from custom 3D model
 
 ![alt text](image-1.png)
+
+## 1.2.2 Huge Clown Fish
+
+![alt text](image-2.png)
