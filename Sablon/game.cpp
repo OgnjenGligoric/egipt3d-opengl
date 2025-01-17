@@ -83,6 +83,7 @@ void Game::Init()
 
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
+    ResourceManager::LoadShader("light.vs", "light.fs", nullptr, "light");
 
 	// configure shaders
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Width /

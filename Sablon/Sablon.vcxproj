@@ -156,6 +156,8 @@
   <ItemGroup>
     <None Include="basic.frag" />
     <None Include="basic.vert" />
+    <None Include="light.fs" />
+    <None Include="light.vs" />
     <None Include="model.fs" />
     <None Include="model.vs" />
     <None Include="packages.config" />

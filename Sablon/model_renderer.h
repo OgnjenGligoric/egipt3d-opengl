@@ -41,7 +41,7 @@ void ModelRenderer::DrawModel(Model& model)
 	model_shader = glm::rotate(model_shader, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	model_shader = glm::rotate(model_shader, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.Use().SetMatrix4("model", model_shader);
-
+	shader.SetVector3f("lightColor", 1.0f, 1.0f, 1.0f);
 	model.Draw(shader);
 }
 

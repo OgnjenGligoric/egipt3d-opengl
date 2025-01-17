@@ -39,6 +39,7 @@ void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec3 position, glm::vec
 
     this->shader.SetFloat("threshold", threshold);
     this->shader.SetVector3f("highlightColor", highlightColor);
+    this->shader.SetVector3f("lightColor", 1.0f, 1.0f, 1.0f);
 
 
     glActiveTexture(GL_TEXTURE0);

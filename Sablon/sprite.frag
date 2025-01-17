@@ -7,12 +7,17 @@ uniform vec3 spriteColor;
 uniform float alpha = 1.0f;
 uniform float threshold = 0.0f;
 uniform vec3 highlightColor = vec3(1.0f, 0.0f, 0.0f);  
+uniform vec3 lightColor;
 
 void main()
 {
-    if (TexCoords.x < threshold) {  // Compare x component of TexCoords to 0.5
-        color = vec4(highlightColor, alpha) * texture(sprite, TexCoords);
+    float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor;
+    vec4 textureColor = texture(sprite, TexCoords);
+
+    if (TexCoords.x < threshold) {  
+        color = vec4(highlightColor, alpha) * vec4(textureColor.rgb * ambient, textureColor.a);
     } else {
-        color = vec4(spriteColor, alpha) * texture(sprite, TexCoords);
+        color = vec4(spriteColor, alpha) * vec4(textureColor.rgb * ambient, textureColor.a);
     }
 }

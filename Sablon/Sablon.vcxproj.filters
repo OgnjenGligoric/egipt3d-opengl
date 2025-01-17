@@ -81,6 +81,12 @@
     <None Include="model.vs">
       <Filter>Source Files\Shader Files</Filter>
     </None>
+    <None Include="light.vs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
+    <None Include="light.fs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
