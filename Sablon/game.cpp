@@ -10,6 +10,7 @@
 #include <ctime>
 #include <thread>
 
+#include "light_renderer.h"
 #include "text_renderer.h"
 #include "model.h"
 
@@ -38,6 +39,9 @@ Model desert;
 Model sky_box_model;
 Model FishModel;
 ModelRenderer* FishModelRenderer;
+Model Light;
+LightRenderer* light_renderer;
+
 float GrassRotation = 0.0f;
 int moveFish = 300;
 
@@ -88,6 +92,8 @@ void Game::Init()
 	// configure shaders
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Width /
         (float)Height, 0.1f, 5000.0f);
+    ResourceManager::GetShader("light").Use().SetMatrix4("projection", projection);
+
     ResourceManager::GetShader("model").Use().SetInteger("image", 0);
     ResourceManager::GetShader("model").SetMatrix4("projection", projection);
 
@@ -139,11 +145,16 @@ void Game::Init()
     pyramid = Model("res/backpack/pyramid.obj");
     desert = Model("res/backpack/desert.obj");
     sky_box_model = Model("res/backpack/skybox.obj");
-    FishModel = Model("res/backpack/clownfish.obj");
+	FishModel = Model("res/backpack/clownfish.obj");
+    Light = Model("res/backpack/transparent_cube.obj");
     FishModelRenderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, 0.0f, -700.0f),
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
+    light_renderer = new LightRenderer(ResourceManager::GetShader("light"),
+        glm::vec3(0.0f, 500.0f, 0.0f),
+        glm::vec3(50.0f, 50.0f, 50.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void Game::Update(float dt)
@@ -160,7 +171,7 @@ void Game::Update(float dt)
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleX), glm::vec3(1.0f, 0.0f, 0.0f));
     view = glm::rotate(view, glm::radians(Renderer->CameraAngleY), glm::vec3(0.0f, 1.0f, 0.0f));
     view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
-    GrassRotation += 2;
+    ResourceManager::GetShader("light").Use().SetMatrix4("view", view);
 	ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
     glm::mat4 model3D = glm::mat4(1.0f);
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
@@ -324,6 +335,7 @@ bool Game::Render()
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
     FishModelRenderer->DrawModel(FishModel);
+    light_renderer->DrawLight(Light);
 
     glDepthMask(GL_FALSE);
     Water->Draw(*Renderer);

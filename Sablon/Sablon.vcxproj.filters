@@ -122,6 +122,9 @@
     <ClInclude Include="model_renderer.h">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="light_renderer.h">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\balrog.png">
