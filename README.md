@@ -15,3 +15,7 @@
 ## 1.2.2 Huge Clown Fish
 
 ![alt text](image-2.png)
+
+# 2.1 Fish Swimming In The Lake
+
+![alt text](image-3.png)
