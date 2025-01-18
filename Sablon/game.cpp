@@ -173,6 +173,7 @@ void Game::Update(float dt)
     view = glm::translate(view, glm::vec3(Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ));
     ResourceManager::GetShader("light").Use().SetMatrix4("view", view);
 	ResourceManager::GetShader("model").Use().SetMatrix4("view", view);
+    ResourceManager::GetShader("model").Use().SetVector3f("viewPos", Renderer->CameraPositionX, Renderer->CameraPositionY, Renderer->CameraPositionZ);
     glm::mat4 model3D = glm::mat4(1.0f);
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
     model3D = glm::scale(model3D, glm::vec3(1500.0f, 1500.0f, 1500.0f));	// it's a bit too big for our scene, so scale it down

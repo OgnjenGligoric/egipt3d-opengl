@@ -43,6 +43,7 @@ void ModelRenderer::DrawModel(Model& model)
 	shader.Use().SetMatrix4("model", model_shader);
 	shader.SetVector3f("lightColor", 1.0f, 1.0f, 1.0f);
 	shader.SetVector3f("lightPos", 0.0f, 500.0f, 0.0f);
+
 	model.Draw(shader);
 }
 
