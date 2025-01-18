@@ -19,3 +19,8 @@
 # 2.1 Fish Swimming In The Lake
 
 ![alt text](image-3.png)
+
+
+# 3.1 Lighting
+
+![1737161733281](images/README/1737161733281.png)
