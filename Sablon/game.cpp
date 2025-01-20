@@ -152,8 +152,8 @@ void Game::Init()
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
     light_renderer = new LightRenderer(ResourceManager::GetShader("light"),
-        glm::vec3(0.0f, 500.0f, 0.0f),
-        glm::vec3(50.0f, 50.0f, 50.0f),
+        glm::vec3(500.0f, 400.0f, 0.0f),
+        glm::vec3(20.0f, 20.0f, 20.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -178,6 +178,7 @@ void Game::Update(float dt)
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
     model3D = glm::scale(model3D, glm::vec3(1500.0f, 1500.0f, 1500.0f));	// it's a bit too big for our scene, so scale it down
     model3D = glm::rotate(model3D, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    ResourceManager::GetShader("model").SetVector3f("lightPos", light_renderer->Position.x + light_renderer->Size.x / 2, light_renderer->Position.y + light_renderer->Size.y / 2, light_renderer->Position.z + light_renderer->Size.z / 2);
 
     ResourceManager::GetShader("model").SetMatrix4("model", model3D);
     
@@ -324,7 +325,7 @@ bool Game::Render()
     sky_box->DrawModel(sky_box_model);
     glm::mat4 model3D = glm::mat4(1.0f);
 
-	model3D = glm::translate(model3D, glm::vec3(500.0f, -100.0f, 0.0f)); // translate it down so it's at the center of the scene
+	model3D = glm::translate(model3D, glm::vec3(500.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
     model3D = glm::scale(model3D, glm::vec3(200.0f, 200.0f, 200.0f));
 
     ResourceManager::GetShader("model").Use().SetMatrix4("model", model3D);
