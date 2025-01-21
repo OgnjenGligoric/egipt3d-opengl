@@ -1,0 +1,13 @@
+# Blender 4.3.2 MTL File: 'None'
+# www.blender.org
+
+newmtl lambert2
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.400000
+d 1.000000
+illum 2
+map_Kd 42366328_2dba7ae11b_b.jpeg
+map_Ns 42366328_2dba7ae11b_b.jpeg
+map_Bump 42366328_2dba7ae11b_b.jpeg

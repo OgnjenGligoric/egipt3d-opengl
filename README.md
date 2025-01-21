@@ -20,7 +20,11 @@
 
 ![alt text](image-3.png)
 
-
 # 3.1 Lighting
 
 ![1737161733281](images/README/1737161733281.png)
+
+
+# 4.1 Specular and diffuse maps
+
+![1737474399857](images/README/1737474399857.png)

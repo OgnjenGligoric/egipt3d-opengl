@@ -142,7 +142,7 @@ void Game::Init()
         glm::vec3(-750.0f, -100.0f, -750.0f), 
         glm::vec3(1500.0f, 1500.0f, 1500.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
-    pyramid = Model("res/backpack/pyramid.obj");
+    pyramid = Model("res/backpack/pyramid/pyramid_spec2.obj");
     desert = Model("res/backpack/desert.obj");
     sky_box_model = Model("res/backpack/skybox.obj");
 	FishModel = Model("res/backpack/clownfish.obj");
@@ -152,7 +152,7 @@ void Game::Init()
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
     light_renderer = new LightRenderer(ResourceManager::GetShader("light"),
-        glm::vec3(500.0f, 400.0f, 0.0f),
+        glm::vec3(300.0f, 400.0f, 0.0f),
         glm::vec3(20.0f, 20.0f, 20.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
 }
@@ -326,7 +326,7 @@ bool Game::Render()
     glm::mat4 model3D = glm::mat4(1.0f);
 
 	model3D = glm::translate(model3D, glm::vec3(500.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    model3D = glm::scale(model3D, glm::vec3(200.0f, 200.0f, 200.0f));
+    model3D = glm::scale(model3D, glm::vec3(300.0f, 300.0f, 300.0f));
 
     ResourceManager::GetShader("model").Use().SetMatrix4("model", model3D);
     pyramid.Draw(ResourceManager::GetShader("model").Use());
