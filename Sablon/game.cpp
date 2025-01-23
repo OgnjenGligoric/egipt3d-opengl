@@ -469,6 +469,7 @@ void Game::_moveFish(float dt)
     direction = (direction < 0) ? -1 : 1;
     FishModelRenderer->Position.z += static_cast<float>(direction);
     FishModelRenderer->Rotation.x = (direction < 0) ? -90.0f : 90.0f;
+    FishModelRenderer->Rotation.y = (direction < 0) ? 180.0f : 0.0f;
 }
 
 void Game::_toggleGrassVisibility()
