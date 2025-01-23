@@ -144,7 +144,7 @@ void Game::Init()
         glm::vec3(1500.0f, 1500.0f, 1500.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
     pyramid = Model("res/backpack/pyramid/pyramid_spec2.obj");
-    desert = Model("res/backpack/desert.obj");
+    desert = Model("res/backpack/sand/desert.obj");
     sky_box_model = Model("res/backpack/skybox.obj");
 	FishModel = Model("res/backpack/clownfish.obj");
     Light = Model("res/backpack/transparent_cube.obj");
