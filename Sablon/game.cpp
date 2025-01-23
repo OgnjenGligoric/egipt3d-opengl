@@ -41,10 +41,11 @@ Model FishModel;
 ModelRenderer* FishModelRenderer;
 Model Light;
 LightRenderer* light_renderer;
-
+glm::mat4 orthogonal_projection;
+glm::mat4 perspective_projection;
+bool toggle_projection = false;
 float GrassRotation = 0.0f;
 int moveFish = 300;
-
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -83,15 +84,15 @@ Game::~Game()
 
 void Game::Init()
 {
-    
-
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
     ResourceManager::LoadShader("light.vs", "light.fs", nullptr, "light");
-
-	// configure shaders
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Width /
+    orthogonal_projection = glm::ortho(0.0f, static_cast<float>(this->Width)/2,
+        static_cast<float>(this->Height)/2, 0.0f, -1000.0f, 4000.0f);
+    perspective_projection = glm::perspective(glm::radians(45.0f), (float)Width /
         (float)Height, 0.1f, 5000.0f);
+	// configure shaders
+    glm::mat4 projection = orthogonal_projection;
     ResourceManager::GetShader("light").Use().SetMatrix4("projection", projection);
 
     ResourceManager::GetShader("model").Use().SetInteger("image", 0);
@@ -157,6 +158,7 @@ void Game::Init()
         glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
+
 void Game::Update(float dt)
 {
     _updateSunAndMoon(dt);
@@ -220,6 +222,10 @@ void Game::ProcessInput(int key)
     {
 	    _toggleGrassVisibility();
     }
+    if (key == GLFW_KEY_Z)
+    {
+        _toggleProjection();
+    }
 
     if (Keys[GLFW_KEY_D])
     {
@@ -238,35 +244,35 @@ void Game::ProcessInput(int key)
         }
     }
     if (Keys[GLFW_KEY_UP]) {
-        Renderer->CameraAngleX -= 5.0f;
+        Renderer->CameraAngleX -= 0.5f;
     }
     if (Keys[GLFW_KEY_DOWN]) {
-        Renderer->CameraAngleX += 5.0f;
+        Renderer->CameraAngleX += 0.5f;
     }
     if (Keys[GLFW_KEY_LEFT]) {
-        Renderer->CameraAngleY -= 5.0f;
+        Renderer->CameraAngleY -= 0.5f;
     }
     if (Keys[GLFW_KEY_RIGHT]) {
-        Renderer->CameraAngleY += 5.0f;
+        Renderer->CameraAngleY += 0.5f;
     }
 
     if (Keys[GLFW_KEY_PAGE_UP]) {
-        Renderer->CameraPositionX += 5.0f;
+        Renderer->CameraPositionX += 0.5f;
     }
     if (Keys[GLFW_KEY_PAGE_DOWN]) {
-        Renderer->CameraPositionX -= 5.0f;
+        Renderer->CameraPositionX -= 0.5f;
     }
     if (Keys[GLFW_KEY_NUM_LOCK]) {
-        Renderer->CameraPositionY += 5.0f;
+        Renderer->CameraPositionY += 0.5f;
     }
     if (Keys[GLFW_KEY_HOME]) {
-        Renderer->CameraPositionY -= 5.0f;
+        Renderer->CameraPositionY -= 0.5f;
     }
     if (Keys[GLFW_KEY_KP_SUBTRACT]) {
-        Renderer->CameraPositionZ -= 5.0f;
+        Renderer->CameraPositionZ -= 0.5f;
     }
     if (Keys[GLFW_KEY_KP_MULTIPLY]) {
-        Renderer->CameraPositionZ += 5.0f;
+        Renderer->CameraPositionZ += 0.5f;
     }
 }
 
@@ -527,5 +533,23 @@ auto Game::_openDoors(float dt) -> void
         if (door->Threshold > 1.0f) {
             door->Threshold = 1.0f; 
         }
+    }
+}
+
+
+void Game::_toggleProjection()
+{
+    toggle_projection = !toggle_projection;
+    if(toggle_projection)
+    {
+        ResourceManager::GetShader("sprite").Use().SetMatrix4("projection", perspective_projection);
+        ResourceManager::GetShader("model").Use().SetMatrix4("projection", perspective_projection);
+        ResourceManager::GetShader("light").Use().SetMatrix4("projection", perspective_projection);
+
+    }else
+    {
+        ResourceManager::GetShader("sprite").Use().SetMatrix4("projection", orthogonal_projection);
+        ResourceManager::GetShader("model").Use().SetMatrix4("projection", orthogonal_projection);
+        ResourceManager::GetShader("light").Use().SetMatrix4("projection", orthogonal_projection);
     }
 }

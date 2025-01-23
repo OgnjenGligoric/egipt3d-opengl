@@ -142,6 +142,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         case GLFW_KEY_3:
         case GLFW_KEY_G:
         case GLFW_KEY_O:
+        case GLFW_KEY_Z:
             Egipt.ProcessInput(key);
             break;
 		default: ;

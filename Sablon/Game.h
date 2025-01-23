@@ -23,6 +23,7 @@ public:
     Game();
     ~Game();
     void Init();
+    void _toggleProjection();
     void ProcessInput(int key);
     void ProcessMouseClick(double x, double y);
     void Update(float dt);
