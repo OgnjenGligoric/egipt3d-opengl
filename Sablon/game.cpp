@@ -38,12 +38,15 @@ Model pyramid;
 Model desert;
 Model sky_box_model;
 Model FishModel;
-ModelRenderer* FishModelRenderer;
+ModelRenderer* fish_model_renderer;
+ModelRenderer* pyramid_renderer1;
+ModelRenderer* pyramid_renderer2;
+ModelRenderer* pyramid_renderer3;
 Model Light;
 LightRenderer* light_renderer;
 glm::mat4 orthogonal_projection;
 glm::mat4 perspective_projection;
-bool toggle_projection = false;
+bool toggle_projection = true;
 float GrassRotation = 0.0f;
 int moveFish = 300;
 
@@ -92,7 +95,7 @@ void Game::Init()
     perspective_projection = glm::perspective(glm::radians(45.0f), (float)Width /
         (float)Height, 0.1f, 5000.0f);
 	// configure shaders
-    glm::mat4 projection = orthogonal_projection;
+    glm::mat4 projection = perspective_projection;
     ResourceManager::GetShader("light").Use().SetMatrix4("projection", projection);
 
     ResourceManager::GetShader("model").Use().SetInteger("image", 0);
@@ -148,13 +151,25 @@ void Game::Init()
     sky_box_model = Model("res/backpack/skybox.obj");
 	FishModel = Model("res/backpack/clownfish.obj");
     Light = Model("res/backpack/transparent_cube.obj");
-    FishModelRenderer = new ModelRenderer(ResourceManager::GetShader("model"),
+    fish_model_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, 0.0f, -700.0f),
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
     light_renderer = new LightRenderer(ResourceManager::GetShader("light"),
         glm::vec3(300.0f, 400.0f, 0.0f),
         glm::vec3(20.0f, 20.0f, 20.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_renderer1 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(500.0f, -100.0f, -500.0f),
+        glm::vec3(300.0f, 300.0f, 300.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_renderer2 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(500.0f, -50.0f, 100.0f),
+        glm::vec3(200.0f, 200.0f, 200.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_renderer3 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(-200.0f, -40.0f, 300.0f),
+        glm::vec3(150.0f, 150.0f, 150.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -244,35 +259,35 @@ void Game::ProcessInput(int key)
         }
     }
     if (Keys[GLFW_KEY_UP]) {
-        Renderer->CameraAngleX -= 0.5f;
+        Renderer->CameraAngleX -= 2.0f;
     }
     if (Keys[GLFW_KEY_DOWN]) {
-        Renderer->CameraAngleX += 0.5f;
+        Renderer->CameraAngleX += 2.0f;
     }
     if (Keys[GLFW_KEY_LEFT]) {
-        Renderer->CameraAngleY -= 0.5f;
+        Renderer->CameraAngleY -= 2.0f;
     }
     if (Keys[GLFW_KEY_RIGHT]) {
-        Renderer->CameraAngleY += 0.5f;
+        Renderer->CameraAngleY += 2.0f;
     }
 
     if (Keys[GLFW_KEY_PAGE_UP]) {
-        Renderer->CameraPositionX += 0.5f;
+        Renderer->CameraPositionX += 2.0f;
     }
     if (Keys[GLFW_KEY_PAGE_DOWN]) {
-        Renderer->CameraPositionX -= 0.5f;
+        Renderer->CameraPositionX -= 2.0f;
     }
     if (Keys[GLFW_KEY_NUM_LOCK]) {
-        Renderer->CameraPositionY += 0.5f;
+        Renderer->CameraPositionY += 2.0f;
     }
     if (Keys[GLFW_KEY_HOME]) {
-        Renderer->CameraPositionY -= 0.5f;
+        Renderer->CameraPositionY -= 2.0f;
     }
     if (Keys[GLFW_KEY_KP_SUBTRACT]) {
-        Renderer->CameraPositionZ -= 0.5f;
+        Renderer->CameraPositionZ -= 2.0f;
     }
     if (Keys[GLFW_KEY_KP_MULTIPLY]) {
-        Renderer->CameraPositionZ += 0.5f;
+        Renderer->CameraPositionZ += 2.0f;
     }
 }
 
@@ -329,20 +344,16 @@ bool Game::Render()
         return true;
     }
     sky_box->DrawModel(sky_box_model);
-    glm::mat4 model3D = glm::mat4(1.0f);
-
-	model3D = glm::translate(model3D, glm::vec3(500.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    model3D = glm::scale(model3D, glm::vec3(300.0f, 300.0f, 300.0f));
-
-    ResourceManager::GetShader("model").Use().SetMatrix4("model", model3D);
-    pyramid.Draw(ResourceManager::GetShader("model").Use());
+    pyramid_renderer1->DrawModel(pyramid);
+    pyramid_renderer2->DrawModel(pyramid);
+    pyramid_renderer3->DrawModel(pyramid);
 
     glm::mat4 desertModel = glm::mat4(1.0f);
     desertModel = glm::translate(desertModel, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
     desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
-    FishModelRenderer->DrawModel(FishModel);
+    fish_model_renderer->DrawModel(FishModel);
     light_renderer->DrawLight(Light);
 
     glDepthMask(GL_FALSE);
@@ -467,9 +478,9 @@ void Game::_moveFish(float dt)
     moveFish = (abs(moveFish) + 1) % 600;
     int direction = moveFish - 300;
     direction = (direction < 0) ? -1 : 1;
-    FishModelRenderer->Position.z += static_cast<float>(direction);
-    FishModelRenderer->Rotation.x = (direction < 0) ? -90.0f : 90.0f;
-    FishModelRenderer->Rotation.y = (direction < 0) ? 180.0f : 0.0f;
+    fish_model_renderer->Position.z += static_cast<float>(direction);
+    fish_model_renderer->Rotation.x = (direction < 0) ? -90.0f : 90.0f;
+    fish_model_renderer->Rotation.y = (direction < 0) ? 180.0f : 0.0f;
 }
 
 void Game::_toggleGrassVisibility()
