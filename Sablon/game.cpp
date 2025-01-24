@@ -38,10 +38,14 @@ Model pyramid;
 Model desert;
 Model sky_box_model;
 Model FishModel;
+Model sun_model;
+Model moon_model;
 ModelRenderer* fish_model_renderer;
 ModelRenderer* pyramid_renderer1;
 ModelRenderer* pyramid_renderer2;
 ModelRenderer* pyramid_renderer3;
+ModelRenderer* moon_renderer;
+ModelRenderer* sun_renderer;
 Model Light;
 LightRenderer* light_renderer;
 glm::mat4 orthogonal_projection;
@@ -151,6 +155,9 @@ void Game::Init()
     sky_box_model = Model("res/backpack/skybox.obj");
 	FishModel = Model("res/backpack/clownfish.obj");
     Light = Model("res/backpack/transparent_cube.obj");
+    sun_model = Model("res/backpack/sun/sun.obj");
+    moon_model = Model("res/backpack/moon/moon.obj");
+    
     fish_model_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, 0.0f, -700.0f),
         glm::vec3(3.0f, 3.0f, 3.0f),
@@ -170,6 +177,14 @@ void Game::Init()
     pyramid_renderer3 = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, -40.0f, 300.0f),
         glm::vec3(150.0f, 150.0f, 150.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    moon_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(-1500.0f, 0.0f, 0.0f),
+        glm::vec3(100.0f, 100.0f, 100.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    sun_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(1500.0f, 0.0f, 0.0f),
+        glm::vec3(10.0f, 10.0f, 10.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -343,11 +358,12 @@ bool Game::Render()
         _shouldClose = false;
         return true;
     }
-    sky_box->DrawModel(sky_box_model);
+    //sky_box->DrawModel(sky_box_model);
     pyramid_renderer1->DrawModel(pyramid);
     pyramid_renderer2->DrawModel(pyramid);
     pyramid_renderer3->DrawModel(pyramid);
-
+    sun_renderer->DrawModel(sun_model);
+    moon_renderer->DrawModel(moon_model);
     glm::mat4 desertModel = glm::mat4(1.0f);
     desertModel = glm::translate(desertModel, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
     desertModel = glm::scale(desertModel, glm::vec3(100.0f, 100.0f, 100.0f));
@@ -369,7 +385,7 @@ bool Game::Render()
 
 void Game::_updateSunAndMoon(float dt)
 {
-	const auto circleCenter = glm::vec2(this->Width / 2.0f, _getSunRiseHeightPoint()); 
+    const auto circleCenter = glm::vec3(0.0f, 0.0f, 0.0f);
 
     _sunAngle += _timeSpeed * dt;       
 
@@ -379,11 +395,11 @@ void Game::_updateSunAndMoon(float dt)
     float sunRadians = glm::radians(_sunAngle);
     float moonRadians = sunRadians + glm::pi<float>(); 
 
-    Sun->Position.x = circleCenter.x + _getSunRotationRadius() * cos(sunRadians);
-    Sun->Position.y = circleCenter.y + _getSunRotationRadius() * sin(sunRadians);
+    sun_renderer->Position.x = 1500.0f * cos(sunRadians);
+    sun_renderer->Position.y = 1500.0f * sin(sunRadians);
 
-    Moon->Position.x = circleCenter.x + _getSunRotationRadius() * cos(moonRadians);
-    Moon->Position.y = circleCenter.y + _getSunRotationRadius() * sin(moonRadians);
+    moon_renderer->Position.x = 1500.0f * cos(moonRadians);
+    moon_renderer->Position.y = 1500.0f * sin(moonRadians);
 }
 
 void Game::_updateSkyBrightness(float dt) const
