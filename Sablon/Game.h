@@ -30,7 +30,7 @@ public:
     bool Render();
 private:
     bool _shouldClose = false;
-    bool _startOpeningDoors;
+    bool _startOpeningDoors = false;
     bool _isDisplayedToBeContinued = false;
     float _toBeContinuedThreshold = 0.0f;
     void _openDoors(float dt);

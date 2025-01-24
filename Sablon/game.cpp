@@ -330,11 +330,7 @@ bool Game::Render()
     //Sun->Draw(*Renderer);
     //Moon->Draw(*Renderer);
     //Desert->Draw(*Renderer);
-    for (size_t i = 0; i < Pyramids.size(); ++i)
-    {
-    //    Pyramids[i]->Draw(*Renderer);
-    //    Doors[i]->Draw(*Renderer);
-    }
+    
     //Fish->Draw(*Renderer);
     for (const auto& grass: Grass)
     {
@@ -378,6 +374,10 @@ bool Game::Render()
     Grass3D->Rotation.y = 90.0f;
     Grass3D->Draw(*Renderer);
     Grass3D->Rotation.y = 0.0f;
+    for (size_t i = 0; i < Pyramids.size(); ++i)
+    {
+        Doors[i]->Draw(*Renderer);
+    }
     glDepthMask(GL_TRUE);
     return false;
 }
@@ -530,13 +530,14 @@ void Game::_initializeDoors() const
     Doors.shrink_to_fit();
     for (const auto& pyramid : Pyramids)
     {
-        Doors.push_back(new GameObject(glm::vec3(pyramid->Position.x+pyramid->Size.x/4, pyramid->Position.y+pyramid->Size.y-pyramid->Size.x/4, 0.0f), glm::vec2(pyramid->Size.x/4,pyramid->Size.x/4), ResourceManager::GetTexture("door")));
+        Doors.push_back(new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(600.0f, 600.0f), ResourceManager::GetTexture("door")));
     }
     for (const auto& door : Doors)
     {
-        door->Alpha = 0.0f;
+        door->Alpha = 1.0f;
         door->Rotation = glm::vec3(0.0f, 0.0f, 270.0f);
         door->HighlightColor = glm::vec3(0.0f, 0.0f, 0.0f);
+        door->Threshold = 0.0f;
     }
 }
 
@@ -544,12 +545,7 @@ void Game::_toggleDoorVisibility()
 {
     for (const auto& door : Doors)
     {
-        door->Alpha = static_cast<int>(door->Alpha + 1.0f) % 2;
-        if (door->Alpha == 1.0f)
-        {
-            _startOpeningDoors = true;
-            door->Threshold = 0.0f;
-        }
+        _startOpeningDoors = true;
     }
 }
 
