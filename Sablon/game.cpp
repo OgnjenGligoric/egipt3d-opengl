@@ -40,10 +40,14 @@ Model sky_box_model;
 Model FishModel;
 Model sun_model;
 Model moon_model;
+Model pyramid_hallway_model;
 ModelRenderer* fish_model_renderer;
 ModelRenderer* pyramid_renderer1;
 ModelRenderer* pyramid_renderer2;
 ModelRenderer* pyramid_renderer3;
+ModelRenderer* pyramid_hallway_renderer1;
+ModelRenderer* pyramid_hallway_renderer2;
+ModelRenderer* pyramid_hallway_renderer3;
 ModelRenderer* moon_renderer;
 ModelRenderer* sun_renderer;
 Model Light;
@@ -157,6 +161,7 @@ void Game::Init()
     Light = Model("res/backpack/transparent_cube.obj");
     sun_model = Model("res/backpack/sun/sun.obj");
     moon_model = Model("res/backpack/moon/moon.obj");
+    pyramid_hallway_model = Model("res/backpack/pyramid/door_hallway.obj");
     
     fish_model_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, 0.0f, -700.0f),
@@ -167,16 +172,28 @@ void Game::Init()
         glm::vec3(20.0f, 20.0f, 20.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     pyramid_renderer1 = new ModelRenderer(ResourceManager::GetShader("model"),
-        glm::vec3(500.0f, -100.0f, -500.0f),
+        glm::vec3(600.0f, -100.0f, -600.0f),
         glm::vec3(300.0f, 300.0f, 300.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_hallway_renderer1 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(600.0f, 50.0f, -900.0f),
+        glm::vec3(50.0f, 50.0f, 50.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     pyramid_renderer2 = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(500.0f, -50.0f, 100.0f),
         glm::vec3(200.0f, 200.0f, 200.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_hallway_renderer2 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(500.0f, 100.0f, -50.0f),
+        glm::vec3(50.0f, 50.0f, 50.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
     pyramid_renderer3 = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, -40.0f, 300.0f),
         glm::vec3(150.0f, 150.0f, 150.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    pyramid_hallway_renderer3 = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3(-200.0f, 100.0f, 100.0f),
+        glm::vec3(50.0f, 50.0f, 50.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     moon_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-1500.0f, 0.0f, 0.0f),
@@ -358,6 +375,9 @@ bool Game::Render()
     pyramid_renderer1->DrawModel(pyramid);
     pyramid_renderer2->DrawModel(pyramid);
     pyramid_renderer3->DrawModel(pyramid);
+    pyramid_hallway_renderer1->DrawModel(pyramid_hallway_model);
+    pyramid_hallway_renderer2->DrawModel(pyramid_hallway_model);
+    pyramid_hallway_renderer3->DrawModel(pyramid_hallway_model);
     sun_renderer->DrawModel(sun_model);
     moon_renderer->DrawModel(moon_model);
     glm::mat4 desertModel = glm::mat4(1.0f);
@@ -528,14 +548,15 @@ void Game::_initializeDoors() const
 {
     Doors.clear(); 
     Doors.shrink_to_fit();
-    for (const auto& pyramid : Pyramids)
-    {
-        Doors.push_back(new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(600.0f, 600.0f), ResourceManager::GetTexture("door")));
-    }
+    
+    Doors.push_back(new GameObject(glm::vec3(550.0f, 0.0f, -952.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
+    Doors.push_back(new GameObject(glm::vec3(450.0f, 50.0f, -102.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
+    Doors.push_back(new GameObject(glm::vec3(-250.0f, 200.0f, 150.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
+
     for (const auto& door : Doors)
     {
         door->Alpha = 1.0f;
-        door->Rotation = glm::vec3(0.0f, 0.0f, 270.0f);
+        door->Rotation = glm::vec3(0.0f, 0.0f, 90.0f);
         door->HighlightColor = glm::vec3(0.0f, 0.0f, 0.0f);
         door->Threshold = 0.0f;
     }
