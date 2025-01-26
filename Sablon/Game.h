@@ -33,6 +33,7 @@ private:
     bool _startOpeningDoors = false;
     bool _isDisplayedToBeContinued = false;
     float _toBeContinuedThreshold = 0.0f;
+    void _toggleLightModel();
     void _openDoors(float dt);
     void _initializeDoors() const;
     void _toggleDoorVisibility();

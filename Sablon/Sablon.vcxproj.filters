@@ -87,6 +87,12 @@
     <None Include="light.fs">
       <Filter>Source Files\Shader Files</Filter>
     </None>
+    <None Include="model_gouard.vs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
+    <None Include="model_gouard.fs">
+      <Filter>Source Files\Shader Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

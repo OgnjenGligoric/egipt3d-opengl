@@ -160,6 +160,8 @@
     <None Include="light.vs" />
     <None Include="model.fs" />
     <None Include="model.vs" />
+    <None Include="model_gouard.fs" />
+    <None Include="model_gouard.vs" />
     <None Include="packages.config" />
     <None Include="sprite.frag" />
     <None Include="sprite.vert" />

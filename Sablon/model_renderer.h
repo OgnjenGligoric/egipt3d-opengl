@@ -15,6 +15,8 @@ public:
 	glm::vec3 Position;
 	glm::vec3 Size;
 	glm::vec3 Rotation;
+	Shader shader;
+
 	ModelRenderer(Shader& shader, glm::vec3 position, glm::vec3 size = glm::vec3(10.0f, 10.0f, 10.0f),
 	              glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
 		Position(position),
@@ -24,9 +26,7 @@ public:
 	ModelRenderer() {}
 	~ModelRenderer();
 	void DrawModel(Model& model);
-
 private:
-	Shader shader;
 };
 
 #endif

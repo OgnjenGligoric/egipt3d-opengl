@@ -54,9 +54,11 @@ Model Light;
 LightRenderer* light_renderer;
 glm::mat4 orthogonal_projection;
 glm::mat4 perspective_projection;
-bool toggle_projection = true;
+bool is_perspective_projection = true;
 float GrassRotation = 0.0f;
 int moveFish = 300;
+bool is_phong_lighting = true;
+
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
@@ -97,6 +99,7 @@ void Game::Init()
 {
 	// load shaders
     ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
+
     ResourceManager::LoadShader("light.vs", "light.fs", nullptr, "light");
     orthogonal_projection = glm::ortho(0.0f, static_cast<float>(this->Width)/2,
         static_cast<float>(this->Height)/2, 0.0f, -1000.0f, 4000.0f);
@@ -108,7 +111,8 @@ void Game::Init()
 
     ResourceManager::GetShader("model").Use().SetInteger("image", 0);
     ResourceManager::GetShader("model").SetMatrix4("projection", projection);
-
+    ResourceManager::GetShader("model_gouard").Use().SetInteger("image", 0);
+    ResourceManager::GetShader("model_gouard").SetMatrix4("projection", projection);
     ResourceManager::LoadShader("sprite.vert", "sprite.frag", nullptr, "sprite");
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
 	ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
@@ -272,6 +276,10 @@ void Game::ProcessInput(int key)
     if (key == GLFW_KEY_Z)
     {
         _toggleProjection();
+    }
+    if (key == GLFW_KEY_L)
+    {
+        _toggleLightModel();
     }
 
     if (Keys[GLFW_KEY_D])
@@ -570,6 +578,34 @@ void Game::_toggleDoorVisibility()
     }
 }
 
+void Game::_toggleLightModel()
+{
+	is_phong_lighting = !is_phong_lighting;
+    if (is_phong_lighting) {
+        ResourceManager::LoadShader("model.vs", "model.fs", nullptr, "model");
+    }
+    else {
+        ResourceManager::LoadShader("model_gouard.vs", "model_gouard.fs", nullptr, "model");
+    }
+    ResourceManager::GetShader("model").Use().SetInteger("image", 0);
+    if (is_perspective_projection) {
+        ResourceManager::GetShader("model").SetMatrix4("projection", perspective_projection);
+    }
+    else {
+        ResourceManager::GetShader("model").SetMatrix4("projection", orthogonal_projection);
+    }
+    fish_model_renderer->shader = ResourceManager::GetShader("model");
+
+    pyramid_renderer1->shader = ResourceManager::GetShader("model");
+    pyramid_hallway_renderer1->shader = ResourceManager::GetShader("model");
+    pyramid_renderer2->shader = ResourceManager::GetShader("model");
+    pyramid_hallway_renderer2->shader = ResourceManager::GetShader("model");
+    pyramid_renderer3->shader = ResourceManager::GetShader("model");
+    pyramid_hallway_renderer3->shader = ResourceManager::GetShader("model");
+    moon_renderer->shader = ResourceManager::GetShader("model");
+    sun_renderer->shader = ResourceManager::GetShader("model");
+}
+
 auto Game::_openDoors(float dt) -> void
 {
     for (const auto& door : Doors)
@@ -584,17 +620,16 @@ auto Game::_openDoors(float dt) -> void
 
 void Game::_toggleProjection()
 {
-    toggle_projection = !toggle_projection;
-    if(toggle_projection)
+    is_perspective_projection = !is_perspective_projection;
+    if(is_perspective_projection)
     {
-        ResourceManager::GetShader("sprite").Use().SetMatrix4("projection", perspective_projection);
-        ResourceManager::GetShader("model").Use().SetMatrix4("projection", perspective_projection);
-        ResourceManager::GetShader("light").Use().SetMatrix4("projection", perspective_projection);
-
+        for (const auto pair : ResourceManager::Shaders) {
+            ResourceManager::GetShader(pair.first).Use().SetMatrix4("projection", perspective_projection);
+        }
     }else
     {
-        ResourceManager::GetShader("sprite").Use().SetMatrix4("projection", orthogonal_projection);
-        ResourceManager::GetShader("model").Use().SetMatrix4("projection", orthogonal_projection);
-        ResourceManager::GetShader("light").Use().SetMatrix4("projection", orthogonal_projection);
+        for (const auto pair : ResourceManager::Shaders) {
+            ResourceManager::GetShader(pair.first).Use().SetMatrix4("projection", orthogonal_projection);
+        }
     }
 }
