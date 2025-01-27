@@ -28,6 +28,14 @@
 
 ![1737161733281](images/README/1737161733281.png)
 
-# 4.1 Specular and diffuse maps
+# 3.2 Specular and diffuse maps
 
 ![1737474399857](images/README/1737474399857.png)
+
+# 3.3 Switching between Gouard and Phong light model
+
+![1737904928279](images/README/1737904928279.png)![1737904945365](images/README/1737904945365.png)
+
+# 3.4 Multiple Light Casters
+
+![1737991494019](images/README/1737991494019.png)

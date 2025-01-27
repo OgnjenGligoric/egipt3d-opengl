@@ -51,7 +51,11 @@ ModelRenderer* pyramid_hallway_renderer3;
 ModelRenderer* moon_renderer;
 ModelRenderer* sun_renderer;
 Model Light;
-LightRenderer* light_renderer;
+LightRenderer* light_renderer1;
+LightRenderer* light_renderer2;
+LightRenderer* light_renderer3;
+LightRenderer* light_renderer4;
+
 glm::mat4 orthogonal_projection;
 glm::mat4 perspective_projection;
 bool is_perspective_projection = true;
@@ -149,6 +153,7 @@ void Game::Init()
 
 	_initializeStars();
 	_initializePyramids();
+    _initializeDoors();
 	Fish = new GameObject(glm::vec3(Width / 1.45f, Height / 1.1f, 0.0f), glm::vec2(Width / 30, Width / 30),
 	                      ResourceManager::GetTexture("fish"));
     Text = new TextRenderer(Width, Height);
@@ -171,8 +176,20 @@ void Game::Init()
         glm::vec3(-200.0f, 0.0f, -700.0f),
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
-    light_renderer = new LightRenderer(ResourceManager::GetShader("light"),
-        glm::vec3(300.0f, 400.0f, 0.0f),
+    light_renderer1 = new LightRenderer(ResourceManager::GetShader("light"),
+        glm::vec3(600.0f, 450.0f, -600.0f),
+        glm::vec3(2.0f, 2.0f, 2.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    light_renderer2 = new LightRenderer(ResourceManager::GetShader("light"),
+        glm::vec3(500.0f, 330.0f, 100.0f),
+        glm::vec3(2.0f, 2.0f, 2.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    light_renderer3 = new LightRenderer(ResourceManager::GetShader("light"),
+        glm::vec3(-200.0f, 250.0f, 300.0f),
+        glm::vec3(2.0f, 2.0f, 2.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f));
+    light_renderer4 = new LightRenderer(ResourceManager::GetShader("light"),
+        glm::vec3(600.0f, 430.0f, -600.0f),
         glm::vec3(20.0f, 20.0f, 20.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     pyramid_renderer1 = new ModelRenderer(ResourceManager::GetShader("model"),
@@ -196,7 +213,7 @@ void Game::Init()
         glm::vec3(150.0f, 150.0f, 150.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     pyramid_hallway_renderer3 = new ModelRenderer(ResourceManager::GetShader("model"),
-        glm::vec3(-200.0f, 100.0f, 100.0f),
+        glm::vec3(-200.0f, 100.0f, 200.0f),
         glm::vec3(50.0f, 50.0f, 50.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
     moon_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
@@ -231,7 +248,6 @@ void Game::Update(float dt)
     model3D = glm::translate(model3D, glm::vec3(-750.0f, -100.0f, -750.0f)); // translate it down so it's at the center of the scene
     model3D = glm::scale(model3D, glm::vec3(1500.0f, 1500.0f, 1500.0f));	// it's a bit too big for our scene, so scale it down
     model3D = glm::rotate(model3D, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    ResourceManager::GetShader("model").SetVector3f("lightPos", light_renderer->Position.x + light_renderer->Size.x / 2, light_renderer->Position.y + light_renderer->Size.y / 2, light_renderer->Position.z + light_renderer->Size.z / 2);
 
     ResourceManager::GetShader("model").SetMatrix4("model", model3D);
     
@@ -394,10 +410,12 @@ bool Game::Render()
     ResourceManager::GetShader("model").Use().SetMatrix4("model", desertModel);
     desert.Draw(ResourceManager::GetShader("model").Use());
     fish_model_renderer->DrawModel(FishModel);
-    light_renderer->DrawLight(Light);
+    light_renderer1->DrawLight(Light);
+    light_renderer2->DrawLight(Light);
+    light_renderer3->DrawLight(Light);
 
     glDepthMask(GL_FALSE);
-    Water->Draw(*Renderer);
+    //Water->Draw(*Renderer);
     Grass3D->Draw(*Renderer);
     Grass3D->Rotation.y = 90.0f;
     Grass3D->Draw(*Renderer);
@@ -489,8 +507,6 @@ void Game::_initializePyramids()
     {
         return a->Position.y + a->Size.y < b->Position.y + b->Size.y;
     });
-
-    _initializeDoors();
 }
 
 void Game::_initializeGrass() const
@@ -559,7 +575,7 @@ void Game::_initializeDoors() const
     
     Doors.push_back(new GameObject(glm::vec3(550.0f, 0.0f, -952.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
     Doors.push_back(new GameObject(glm::vec3(450.0f, 50.0f, -102.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
-    Doors.push_back(new GameObject(glm::vec3(-250.0f, 200.0f, 150.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
+    Doors.push_back(new GameObject(glm::vec3(-250.0f, 50.0f, 148.0f), glm::vec2(100.0f, 100.0f), ResourceManager::GetTexture("door")));
 
     for (const auto& door : Doors)
     {
