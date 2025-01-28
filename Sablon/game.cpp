@@ -315,35 +315,35 @@ void Game::ProcessInput(int key)
         }
     }
     if (Keys[GLFW_KEY_UP]) {
-        Renderer->CameraAngleX -= 2.0f;
+        Renderer->CameraAngleX -= 1.0f;
     }
     if (Keys[GLFW_KEY_DOWN]) {
-        Renderer->CameraAngleX += 2.0f;
+        Renderer->CameraAngleX += 1.0f;
     }
     if (Keys[GLFW_KEY_LEFT]) {
-        Renderer->CameraAngleY -= 2.0f;
+        Renderer->CameraAngleY -= 1.0f;
     }
     if (Keys[GLFW_KEY_RIGHT]) {
-        Renderer->CameraAngleY += 2.0f;
+        Renderer->CameraAngleY += 1.0f;
     }
 
     if (Keys[GLFW_KEY_PAGE_UP]) {
-        Renderer->CameraPositionX += 2.0f;
+        Renderer->CameraPositionX += 1.0f;
     }
     if (Keys[GLFW_KEY_PAGE_DOWN]) {
-        Renderer->CameraPositionX -= 2.0f;
+        Renderer->CameraPositionX -= 1.0f;
     }
     if (Keys[GLFW_KEY_NUM_LOCK]) {
-        Renderer->CameraPositionY += 2.0f;
+        Renderer->CameraPositionY += 1.0f;
     }
     if (Keys[GLFW_KEY_HOME]) {
-        Renderer->CameraPositionY -= 2.0f;
+        Renderer->CameraPositionY -= 1.0f;
     }
     if (Keys[GLFW_KEY_KP_SUBTRACT]) {
-        Renderer->CameraPositionZ -= 2.0f;
+        Renderer->CameraPositionZ -= 1.0f;
     }
     if (Keys[GLFW_KEY_KP_MULTIPLY]) {
-        Renderer->CameraPositionZ += 2.0f;
+        Renderer->CameraPositionZ += 1.0f;
     }
 }
 
@@ -541,6 +541,9 @@ void Game::_moveFish(float dt)
     fish_model_renderer->Position.z += static_cast<float>(direction);
     fish_model_renderer->Rotation.x = (direction < 0) ? -90.0f : 90.0f;
     fish_model_renderer->Rotation.y = (direction < 0) ? 180.0f : 0.0f;
+    const glm::vec3 spotlight_position = glm::vec3(601.0f, 440.0f, -596.0f);
+    glm::vec3 spotlight_direction = glm::normalize(fish_model_renderer->Position - spotlight_position);
+    ResourceManager::GetShader("model").Use().SetVector3f("spotLight.direction", spotlight_direction);
 }
 
 void Game::_toggleGrassVisibility()

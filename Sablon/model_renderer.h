@@ -85,15 +85,15 @@ void ModelRenderer::DrawModel(Model& model)
     //shader.SetFloat("pointLights[3].quadratic", 0.032f);
     //// spotLight
     shader.SetVector3f("spotLight.position", 601.0f, 440.0f, -596.0f);
-    shader.SetVector3f("spotLight.direction", -1.0f, -0.5f, 0.0f);
+    //shader.SetVector3f("spotLight.direction", -1.0f, -0.5f, 0.0f);
     shader.SetVector3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
     shader.SetVector3f("spotLight.diffuse", 1.0f, 0.0f, 0.0f);
     shader.SetVector3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
     shader.SetFloat("spotLight.constant", 1.0f);
     shader.SetFloat("spotLight.linear", 0.00014);
     shader.SetFloat("spotLight.quadratic", 0.00000007);
-    shader.SetFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader.SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(12.5f)));
+    shader.SetFloat("spotLight.cutOff", glm::cos(glm::radians(5.0f)));
+    shader.SetFloat("spotLight.outerCutOff", glm::cos(glm::radians(7.5f)));
 
 	model.Draw(shader);
 }
