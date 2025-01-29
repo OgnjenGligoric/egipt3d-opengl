@@ -52,6 +52,7 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_normal1;
 uniform sampler2D texture_specular1;
 
+uniform float alpha;
 uniform vec3 lightColor;
 uniform DirLight dirLight;  
 uniform PointLight pointLights[NR_POINT_LIGHTS];
@@ -74,7 +75,7 @@ void main()
 
     result += CalcSpotLight(spotLight, normal, FragPos, viewDir);  
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, alpha);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

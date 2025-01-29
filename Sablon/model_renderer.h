@@ -15,14 +15,16 @@ public:
 	glm::vec3 Position;
 	glm::vec3 Size;
 	glm::vec3 Rotation;
+    float Alpha;
 	Shader shader;
 
 	ModelRenderer(Shader& shader, glm::vec3 position, glm::vec3 size = glm::vec3(10.0f, 10.0f, 10.0f),
-	              glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
+	              glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f), float alpha = 1.0f) :
 		Position(position),
 		Size(size),
 		Rotation(rotation),
-		shader(shader) {}
+		shader(shader),
+		Alpha(alpha){}
 	ModelRenderer() {}
 	~ModelRenderer();
 	void DrawModel(Model& model);
@@ -46,6 +48,7 @@ void ModelRenderer::DrawModel(Model& model)
 	model_shader = glm::rotate(model_shader, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	model_shader = glm::rotate(model_shader, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.Use().SetMatrix4("model", model_shader);
+    shader.SetFloat("alpha", Alpha);
 	shader.SetVector3f("lightColor", 1.0f, 1.0f, 1.0f);
     shader.SetVector3f("dirLight.direction", 0.0f, -1.0f, -1.0f);
     shader.SetVector3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
