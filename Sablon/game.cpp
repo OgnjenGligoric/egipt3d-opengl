@@ -41,6 +41,8 @@ Model FishModel;
 Model sun_model;
 Model moon_model;
 Model pyramid_hallway_model;
+Model water;
+ModelRenderer* water_renderer;
 ModelRenderer* fish_model_renderer;
 ModelRenderer* pyramid_renderer1;
 ModelRenderer* pyramid_renderer2;
@@ -171,8 +173,12 @@ void Game::Init()
     sun_model = Model("res/backpack/sun/sun.obj");
     moon_model = Model("res/backpack/moon/moon.obj");
     pyramid_hallway_model = Model("res/backpack/pyramid/door_hallway.obj");
-    
-    fish_model_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
+    water = Model("res/backpack/water/water.obj");
+	water_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
+        glm::vec3( -150.0f, 0.0f, -600.0f),
+        glm::vec3(30.0f, 30.0f, 30.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f), 0.5f);
+	fish_model_renderer = new ModelRenderer(ResourceManager::GetShader("model"),
         glm::vec3(-200.0f, 0.0f, -700.0f),
         glm::vec3(3.0f, 3.0f, 3.0f),
         glm::vec3(90.0f, 0.0f, 0.0f));
@@ -420,6 +426,7 @@ bool Game::Render()
     Grass3D->Rotation.y = 90.0f;
     Grass3D->Draw(*Renderer);
     Grass3D->Rotation.y = 0.0f;
+    water_renderer->DrawModel(water);
     for (size_t i = 0; i < Pyramids.size(); ++i)
     {
         Doors[i]->Draw(*Renderer);

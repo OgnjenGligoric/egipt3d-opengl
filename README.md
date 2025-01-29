@@ -39,3 +39,7 @@
 # 3.4 Multiple Light Casters
 
 ![1737991494019](images/README/1737991494019.png)
+
+# 3.5 Spotlight Following the Fish
+
+![alt text](image-4.png)
