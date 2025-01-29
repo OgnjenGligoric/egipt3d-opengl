@@ -230,6 +230,7 @@ void Game::Init()
         glm::vec3(1500.0f, 0.0f, 0.0f),
         glm::vec3(10.0f, 10.0f, 10.0f),
         glm::vec3(0.0f, 0.0f, 0.0f));
+    sun_renderer->ApplyLight = 0.0f;
 }
 
 
@@ -457,15 +458,17 @@ void Game::_updateSunAndMoon(float dt)
 
 void Game::_updateSkyBrightness(float dt) const
 {
-    float normalizedHeight = (_getSunRiseHeightPoint() - Sun->Position.y) / _getSunRotationRadius();
+    float normalizedHeight = (_getSunRiseHeightPoint() - sun_renderer->Position.y) / _getSunRotationRadius();
     normalizedHeight = glm::clamp(normalizedHeight, 0.0f, 1.0f);
 
-    const glm::vec3 darkestColor = glm::vec3(0.0f, 0.0f, 0.3f); // Midnight blue
+    const glm::vec3 darkestColor = glm::vec3(0.0f, 0.0f, 0.1f); // Midnight blue
     const glm::vec3 brightestColor = glm::vec3(0.5f, 0.7f, 1.0f); // Sky blue
 
-    const glm::vec3 currentColor = glm::mix(darkestColor, brightestColor, normalizedHeight);
+    const glm::vec3 currentColor = glm::mix(brightestColor, darkestColor, normalizedHeight);
+    glm::vec3 sun_direction = glm::normalize(sun_renderer->Position);
+    ResourceManager::GetShader("model").Use().SetVector3f("dirLight.direction", -sun_direction.x, -sun_direction.y, -sun_direction.z);
 
-    Sky->Color = currentColor;
+    glClearColor(currentColor.r, currentColor.g, currentColor.b, 1.0f);
     const float starVisibility = 1.0f - normalizedHeight; 
     for (const auto& star : Stars) {
         star->Alpha = starVisibility;

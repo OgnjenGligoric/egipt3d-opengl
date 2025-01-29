@@ -16,6 +16,7 @@ public:
 	glm::vec3 Size;
 	glm::vec3 Rotation;
     float Alpha;
+    float ApplyLight;
 	Shader shader;
 
 	ModelRenderer(Shader& shader, glm::vec3 position, glm::vec3 size = glm::vec3(10.0f, 10.0f, 10.0f),
@@ -24,7 +25,8 @@ public:
 		Size(size),
 		Rotation(rotation),
 		shader(shader),
-		Alpha(alpha){}
+		Alpha(alpha),
+		ApplyLight(1.0){}
 	ModelRenderer() {}
 	~ModelRenderer();
 	void DrawModel(Model& model);
@@ -37,8 +39,8 @@ void ModelRenderer::DrawModel(Model& model)
 	glBindTexture(GL_TEXTURE_2D, 0);
     glm::vec3 pointLightPositions[] = {
         glm::vec3(601.0f, 440.0f, -596.0f),
-        glm::vec3(500.0f, 330.0f, 100.0f),
-        glm::vec3(-200.0f, 250.0f, 300.0f),
+        glm::vec3(500.0f, 330.0f, 150.0f),
+        glm::vec3(-200.0f, 250.0f, 350.0f),
         glm::vec3(0.0f,  300.0f, -3.0f)
     };
 	glm::mat4 model_shader = glm::mat4(1.0f);
@@ -49,10 +51,11 @@ void ModelRenderer::DrawModel(Model& model)
 	model_shader = glm::rotate(model_shader, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.Use().SetMatrix4("model", model_shader);
     shader.SetFloat("alpha", Alpha);
+    shader.SetFloat("applyLight", ApplyLight);
 	shader.SetVector3f("lightColor", 1.0f, 1.0f, 1.0f);
-    shader.SetVector3f("dirLight.direction", 0.0f, -1.0f, -1.0f);
-    shader.SetVector3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-    shader.SetVector3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+    //shader.SetVector3f("dirLight.direction", 0.0f, -1.0f, -1.0f);
+    shader.SetVector3f("dirLight.ambient", 0.15f, 0.15f, 0.15f);
+    shader.SetVector3f("dirLight.diffuse", 1.0f, 1.0f, 1.0f);
     shader.SetVector3f("dirLight.specular", 0.2f, 0.2f, 0.2f);
     //// point light 1
     shader.SetVector3f("pointLights[0].position", pointLightPositions[0]);
