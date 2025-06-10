@@ -633,6 +633,7 @@ void Game::_toggleLightModel()
     pyramid_hallway_renderer3->shader = ResourceManager::GetShader("model");
     moon_renderer->shader = ResourceManager::GetShader("model");
     sun_renderer->shader = ResourceManager::GetShader("model");
+    water_renderer->shader = ResourceManager::GetShader("model");
 }
 
 auto Game::_openDoors(float dt) -> void
